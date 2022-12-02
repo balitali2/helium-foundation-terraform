@@ -58,7 +58,6 @@ variable "cluster_desired_size" {
 variable "rds_password" {
   type = string
 }
-
 variable "external_dns_chart_log_level" {
   description = "External-dns Helm chart log leve. Possible values are: panic, debug, info, warn, error, fatal"
   type        = string
