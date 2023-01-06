@@ -24,72 +24,72 @@ resource "aws_s3_bucket" "mainfest_bucket" {
 }
 
 # Create bucket policy for poc data buckets to enable S3 cross-account replication
-# resource "aws_s3_bucket_policy" "poc_data_buckets_bucket_policy_for_s3_cross_account_replication" {
-#   for_each = toset(local.hf_bucket_names)
+resource "aws_s3_bucket_policy" "poc_data_buckets_bucket_policy_for_s3_cross_account_replication" {
+  for_each = toset(local.hf_bucket_names)
 
-#   bucket = each.value
-#   policy = data.aws_iam_policy_document.poc_data_buckets_bucket_policy_for_s3_cross_account_replication_rules[each.value].json
+  bucket = each.value
+  policy = data.aws_iam_policy_document.poc_data_buckets_bucket_policy_for_s3_cross_account_replication_rules[each.value].json
 
-#   depends_on = [
-#     aws_s3_bucket.poc_data_buckets,
-#     data.aws_iam_policy_document.poc_data_buckets_bucket_policy_for_s3_cross_account_replication_rules
-#   ]
-# }
+  depends_on = [
+    aws_s3_bucket.poc_data_buckets,
+    data.aws_iam_policy_document.poc_data_buckets_bucket_policy_for_s3_cross_account_replication_rules
+  ]
+}
 
-# # Create bucket policy rules for bucket policies of poc data buckets to enable S3 cross-account replication from Nova
-# data "aws_iam_policy_document" "poc_data_buckets_bucket_policy_for_s3_cross_account_replication_rules" {
-#   for_each = toset(local.hf_bucket_names)
+# Create bucket policy rules for bucket policies of poc data buckets to enable S3 cross-account replication from Nova
+data "aws_iam_policy_document" "poc_data_buckets_bucket_policy_for_s3_cross_account_replication_rules" {
+  for_each = toset(local.hf_bucket_names)
   
-#   statement {
-#     principals {
-#       type        = "AWS"
-#       identifiers = [
-#         "arn:aws:iam::${local.nova_account_ids[0]}:role/foundation-s3-replication",
-#         "arn:aws:iam::${local.nova_account_ids[1]}:role/foundation-s3-replication"
-#       ]
-#     }
-#     actions = [
-#       "s3:ReplicateObject",
-#       "s3:ReplicateDelete"
-#     ]
-#     resources = [
-#       "arn:aws:s3:::${each.value}/*",
-#     ]
-#   }
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = [
+        "arn:aws:iam::${local.nova_account_ids[0]}:role/foundation-s3-replication",
+        "arn:aws:iam::${local.nova_account_ids[1]}:role/foundation-s3-replication"
+      ]
+    }
+    actions = [
+      "s3:ReplicateObject",
+      "s3:ReplicateDelete"
+    ]
+    resources = [
+      "arn:aws:s3:::${each.value}/*",
+    ]
+  }
 
-#   statement {
-#     principals {
-#       type        = "AWS"
-#       identifiers = [
-#         "arn:aws:iam::${local.nova_account_ids[0]}:root",
-#         "arn:aws:iam::${local.nova_account_ids[1]}:root"
-#       ]
-#     }
-#     actions = [
-#       "s3:ObjectOwnerOverrideToBucketOwner"
-#     ]
-#     resources = [
-#       "arn:aws:s3:::${each.value}/*",
-#     ]
-#   }
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = [
+        "arn:aws:iam::${local.nova_account_ids[0]}:root",
+        "arn:aws:iam::${local.nova_account_ids[1]}:root"
+      ]
+    }
+    actions = [
+      "s3:ObjectOwnerOverrideToBucketOwner"
+    ]
+    resources = [
+      "arn:aws:s3:::${each.value}/*",
+    ]
+  }
 
-#   statement {
-#     principals {
-#       type        = "AWS"
-#       identifiers = [
-#         "arn:aws:iam::${local.nova_account_ids[0]}:role/foundation-s3-replication",
-#         "arn:aws:iam::${local.nova_account_ids[1]}:role/foundation-s3-replication"
-#       ]
-#     }
-#     actions = [
-#       "s3:GetBucketVersioning",
-#       "s3:PutBucketVersioning"
-#     ]
-#     resources = [
-#       "arn:aws:s3:::${each.value}",
-#     ]
-#   }
-# }
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = [
+        "arn:aws:iam::${local.nova_account_ids[0]}:role/foundation-s3-replication",
+        "arn:aws:iam::${local.nova_account_ids[1]}:role/foundation-s3-replication"
+      ]
+    }
+    actions = [
+      "s3:GetBucketVersioning",
+      "s3:PutBucketVersioning"
+    ]
+    resources = [
+      "arn:aws:s3:::${each.value}",
+    ]
+  }
+}
 
 # Create bucket policy for mainfest bucket to receive manifests from Nova
 resource "aws_s3_bucket_policy" "s3_batch_operation_policy" {
