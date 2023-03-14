@@ -11,7 +11,7 @@ resource "aws_ssm_parameter" "irsa_arn" {
   name        = "/eks/karpenter/irsa_arn"
   description = "ARN of IRSA required for Karpenter"
   type        = "String"
-  value       = "${module.karpenter.irsa_arn}"
+  value       = "${module.karpenter[0].irsa_arn}"
 }
 
 resource "aws_ssm_parameter" "instance_profile_name" {
@@ -20,7 +20,7 @@ resource "aws_ssm_parameter" "instance_profile_name" {
   name        = "/eks/karpenter/instance_profile_name"
   description = "Instance profile name for Karpenter"
   type        = "String"
-  value       = "${module.karpenter.instance_profile_name}"
+  value       = "${module.karpenter[0].instance_profile_name}"
 }
 
 resource "aws_ssm_parameter" "queue_name" {
@@ -29,5 +29,5 @@ resource "aws_ssm_parameter" "queue_name" {
   name        = "/eks/karpenter/queue_name"
   description = "SQS name for Karpenter"
   type        = "String"
-  value       = "${module.karpenter.queue_name}"
+  value       = "${module.karpenter[0].queue_name}"
 }
