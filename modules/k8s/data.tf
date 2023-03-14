@@ -13,6 +13,10 @@ data "kubectl_path_documents" "application" {
   }
 }
 
+data "kubectl_path_documents" "karpenter" {
+  pattern = "${path.module}/karpenter/provisioner.yaml"
+}
+
 data "aws_eks_cluster" "eks" {
   name = local.cluster_name
 }
@@ -22,3 +26,21 @@ data "aws_eks_cluster_auth" "eks" {
 }
 
 data "aws_caller_identity" "current" {}
+
+data "aws_ecrpublic_authorization_token" "token" {}
+
+data "aws_ssm_parameter" "is_karpenter_deployed" {
+  name = "/eks/karpenter/is_deployed"
+}
+
+data "aws_ssm_parameter" "karpenter_irsa_arn" {
+  name = "/eks/karpenter/irsa_arn"
+}
+
+data "aws_ssm_parameter" "karpenter_instance_profile_name" {
+  name = "/eks/karpenter/instance_profile_name"
+}
+
+data "aws_ssm_parameter" "karpenter_queue_name" {
+  name = "/eks/karpenter/queue_name"
+}

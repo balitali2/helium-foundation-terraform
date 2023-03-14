@@ -42,11 +42,12 @@ module "vpc" {
   database_subnets   = var.database_subnets
   public_subnet_tags = {
     "kubernetes.io/cluster/${var.cluster_name}-${var.stage}" = "shared"
-    "kubernetes.io/role/elb"                      = 1
+    "kubernetes.io/role/elb"                                 = 1
   }
   private_subnet_tags = {
     "kubernetes.io/cluster/${var.cluster_name}-${var.stage}" = "shared"
-    "kubernetes.io/role/internal-elb"             = 1
+    "kubernetes.io/role/internal-elb"                        = 1
+    "karpenter.sh/discovery"                                 = "true"
   }
 }
 
@@ -78,6 +79,7 @@ module "eks" {
   cluster_max_size                = var.cluster_max_size
   cluster_desired_size            = var.cluster_desired_size
   eks_instance_type               = var.eks_instance_type
+  karpenter_autoscaling           = var.karpenter_autoscaling
   manage_aws_auth_configmap       = var.manage_aws_auth_configmap
   eks_managed_node_group_defaults = {
     ami_type = "AL2_x86_64"
@@ -87,6 +89,9 @@ module "eks" {
     # Disabling and using externally provided security groups
     create_security_group = false
   }
+
+  # Remove this tag to allow the aws lb to target a single sg using the tag
+  # https://github.com/terraform-aws-modules/terraform-aws-eks/issues/2258
   node_security_group_tags        = {
     "kubernetes.io/cluster/${var.cluster_name}-${var.stage}" = null
   }
