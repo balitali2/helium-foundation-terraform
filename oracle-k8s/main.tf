@@ -9,6 +9,14 @@ provider "aws" {
   }
 }
 
+# Workaround for aws_ecrpublic_authorization_token bug
+# https://github.com/hashicorp/terraform-provider-aws/issues/28281
+provider "aws" {
+  region = "us-east-1"
+  alias  = "virginia"
+}
+
+
 # Kubernetes provider
 # https://learn.hashicorp.com/terraform/kubernetes/provision-eks-cluster#optional-configure-terraform-kubernetes-provider
 # To learn how to schedule deployments and services using the provider, go here: https://learn.hashicorp.com/terraform/kubernetes/deploy-nginx-kubernetes
