@@ -93,3 +93,9 @@ variable "manage_aws_auth_configmap" {
   type        = bool
   default     = true
 }
+
+variable "karpenter_autoscaling" {
+  description = "Have Karpenter manage AWS EKS autoscaling"
+  type        = bool
+  default     = false
+}

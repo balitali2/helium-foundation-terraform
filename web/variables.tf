@@ -109,6 +109,12 @@ variable "manage_aws_auth_configmap" {
   default     = true
 }
 
+variable "karpenter_autoscaling" {
+  description = "Have Karpenter manage AWS EKS autoscaling"
+  type        = bool
+  default     = false
+}
+
 # --- RDS variables ------------------------------------------------
 variable "rds_instance_type" {
   description = "Instance type for RDS"
