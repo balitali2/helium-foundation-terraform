@@ -15,6 +15,9 @@ data "kubectl_path_documents" "application" {
 
 data "kubectl_path_documents" "karpenter" {
   pattern = "${path.module}/karpenter/provisioner.yaml"
+  vars = {
+    eks_name = data.aws_eks_cluster.eks.name
+  }
 }
 
 data "aws_eks_cluster" "eks" {

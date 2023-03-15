@@ -38,54 +38,7 @@ resource "helm_release" "karpenter" {
 }
 
 resource "kubectl_manifest" "karpenter" {
-  yaml_body = <<-YAML
-    apiVersion: karpenter.sh/v1alpha5
-    kind: Provisioner
-    metadata:
-      name: default
-    spec:
-      ttlSecondsAfterEmpty: 60 # scale down nodes after 60 seconds without workloads (excluding daemons)
-      limits:
-        resources:
-          cpu: 1000
-          memory: 1000Gi # limit to 100 CPU cores
-      requirements:
-        # Include general purpose instance families
-        - key: karpenter.k8s.aws/instance-family
-          operator: In
-          values: [m5]
-        # Exclude small instance sizes
-        - key: karpenter.k8s.aws/instance-size
-          operator: NotIn
-          values: [nano, micro, small]
-        - key: "kubernetes.io/arch"
-          operator: In
-          values: ["amd64"]
-      consolidation:
-        enabled: true
-      providerRef:
-        name: provider
-  YAML
-
   depends_on = [helm_release.karpenter]
-}
-
-resource "kubectl_manifest" "karpenter_node_template" {
-  yaml_body = <<-YAML
-    apiVersion: karpenter.k8s.aws/v1alpha1
-    kind: AWSNodeTemplate
-    metadata:
-      name: provider
-    spec:
-      subnetSelector:
-        karpenter.sh/discovery: "true"
-      securityGroupSelector:
-        karpenter.sh/discovery: ${data.aws_eks_cluster.eks.name}
-      tags:
-        karpenter.sh/discovery: ${data.aws_eks_cluster.eks.name}
-  YAML
-
-  depends_on = [
-    helm_release.karpenter
-  ]
+  count      = length(data.kubectl_path_documents.karpenter.documents)
+  yaml_body  = element(data.kubectl_path_documents.karpenter.documents, count.index)
 }
