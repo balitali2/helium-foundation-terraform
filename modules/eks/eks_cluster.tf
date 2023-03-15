@@ -15,12 +15,21 @@ module "eks" {
 
   node_security_group_tags = merge(
     var.node_security_group_tags,
-    var.karpenter_autoscaling 
-    ? {
-        "karpenter.sh/discovery" =  "${var.cluster_name}-${var.stage}"
-      }  
-    : {}
-    )
+    var.karpenter_autoscaling ? {
+      "karpenter.sh/discovery" =  "${var.cluster_name}-${var.stage}"
+    } : {}
+  )
+  
+  node_security_group_additional_rules = var.karpenter_autoscaling ? {
+      ingress_nodes_karpenter_port = {
+        description                   = "Cluster API to Node group for Karpenter webhook"
+        protocol                      = "tcp"
+        from_port                     = 8443
+        to_port                       = 8443
+        type                          = "ingress"
+        source_cluster_security_group = true
+      }
+    } : {}
 
   eks_managed_node_groups = {
     medium_group = {
