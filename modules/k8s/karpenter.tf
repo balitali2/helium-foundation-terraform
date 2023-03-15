@@ -9,7 +9,7 @@ resource "helm_release" "karpenter" {
   repository_username = data.aws_ecrpublic_authorization_token.token.user_name
   repository_password = data.aws_ecrpublic_authorization_token.token.password
   chart               = "karpenter"
-  version             = "v0.20.0"
+  version             = "v0.27.0"
 
   set {
     name  = "settings.aws.clusterName"
@@ -37,8 +37,56 @@ resource "helm_release" "karpenter" {
   }
 }
 
-resource "kubectl_manifest" "karpenter" {
-  depends_on = [helm_release.karpenter]
-  count      = length(data.kubectl_path_documents.karpenter.documents)
-  yaml_body  = element(data.kubectl_path_documents.karpenter.documents, count.index)
+resource "kubectl_manifest" "karpenter_provisioner" {
+  yaml_body = <<-YAML
+    apiVersion: karpenter.sh/v1alpha5
+    kind: Provisioner
+    metadata:
+      name: default
+    spec:
+      ttlSecondsAfterEmpty: 60
+      limits:
+        resources:
+          cpu: 1000
+          memory: 1000Gi # limit to 100 CPU cores
+      requirements:
+        - key: karpenter.k8s.aws/instance-family
+          operator: In
+          values: [m5]
+        - key: karpenter.k8s.aws/instance-size
+          operator: NotIn
+          values: [nano, micro, small]
+        - key: "kubernetes.io/arch"
+          operator: In
+          values: ["amd64"]
+      consolidation:
+        enabled: true
+      providerRef:
+        name: provider
+  YAML
+
+  depends_on = [
+    helm_release.karpenter
+  ]
+}
+
+
+resource "kubectl_manifest" "karpenter_node_template" {
+  yaml_body = <<-YAML
+    apiVersion: karpenter.k8s.aws/v1alpha1
+    kind: AWSNodeTemplate
+    metadata:
+      name: default
+    spec:
+      subnetSelector:
+        karpenter.sh/discovery: "true"
+      securityGroupSelector:
+        karpenter.sh/discovery: ${data.aws_eks_cluster.eks.name}
+      tags:
+        karpenter.sh/discovery: ${data.aws_eks_cluster.eks.name}
+  YAML
+
+  depends_on = [
+    helm_release.karpenter
+  ]
 }
