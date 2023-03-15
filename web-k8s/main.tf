@@ -47,9 +47,9 @@ module "k8s" {
 
   # Workaround for aws_ecrpublic_authorization_token bug
   providers = {
-    aws.virginia = aws.virginia
+    aws = aws.virginia
   }
-
+  
   # Env
   env   = var.env // in tf cloud, create add var: env = web
   stage = var.stage // in tf cloud, create add var: stage = sdlc

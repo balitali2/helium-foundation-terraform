@@ -1,5 +1,5 @@
 resource "helm_release" "karpenter" {
-  count = data.aws_ssm_parameter.is_karpenter_deployed ? 1 : 0
+  count = data.aws_ssm_parameter.is_karpenter_deployed == "true" ? 1 : 0
 
   namespace        = "karpenter"
   create_namespace = true
