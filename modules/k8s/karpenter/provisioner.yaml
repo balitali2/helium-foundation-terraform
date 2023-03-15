@@ -1,0 +1,36 @@
+apiVersion: karpenter.sh/v1alpha5
+kind: Provisioner
+metadata:
+  name: default
+spec:
+  ttlSecondsAfterEmpty: 60
+  limits:
+    resources:
+      cpu: 1000
+      memory: 1000Gi # limit to 100 CPU cores
+  requirements:
+    - key: karpenter.k8s.aws/instance-family
+      operator: In
+      values: [m5]
+    - key: karpenter.k8s.aws/instance-size
+      operator: NotIn
+      values: [nano, micro, small]
+    - key: "kubernetes.io/arch"
+      operator: In
+      values: ["amd64"]
+  consolidation:
+    enabled: true
+  providerRef:
+    name: provider
+---
+apiVersion: karpenter.k8s.aws/v1alpha1
+kind: AWSNodeTemplate
+metadata:
+  name: default
+spec:
+  subnetSelector:
+    karpenter.sh/discovery: "true"
+  securityGroupSelector:
+    karpenter.sh/discovery: ${eks_name}
+  tags:
+    karpenter.sh/discovery: ${eks_name}
