@@ -53,9 +53,9 @@ resource "kubectl_manifest" "karpenter_node_template" {
       subnetSelector:
         karpenter.sh/discovery: "true"
       securityGroupSelector:
-        karpenter.sh/discovery: ${data.aws_eks_cluster.eks.cluster_name}
+        karpenter.sh/discovery: ${data.aws_eks_cluster.eks.name}
       tags:
-        karpenter.sh/discovery: ${data.aws_eks_cluster.eks.cluster_name}
+        karpenter.sh/discovery: ${data.aws_eks_cluster.eks.name}
   YAML
 
   depends_on = [
