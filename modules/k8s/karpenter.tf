@@ -1,5 +1,5 @@
 resource "helm_release" "karpenter" {
-  count = data.aws_ssm_parameter.is_karpenter_deployed ? 1 : 0
+  count = data.aws_ssm_parameter.is_karpenter_deployed == "true" ? 1 : 0
 
   namespace        = "karpenter"
   create_namespace = true
@@ -41,4 +41,24 @@ resource "kubectl_manifest" "karpenter" {
   depends_on = [helm_release.karpenter]
   count      = length(data.kubectl_path_documents.karpenter.documents)
   yaml_body  = element(data.kubectl_path_documents.karpenter.documents, count.index)
+}
+
+resource "kubectl_manifest" "karpenter_node_template" {
+  yaml_body = <<-YAML
+    apiVersion: karpenter.k8s.aws/v1alpha1
+    kind: AWSNodeTemplate
+    metadata:
+      name: provider
+    spec:
+      subnetSelector:
+        karpenter.sh/discovery: "true"
+      securityGroupSelector:
+        karpenter.sh/discovery: ${data.aws_eks_cluster.eks.name}
+      tags:
+        karpenter.sh/discovery: ${data.aws_eks_cluster.eks.name}
+  YAML
+
+  depends_on = [
+    helm_release.karpenter
+  ]
 }

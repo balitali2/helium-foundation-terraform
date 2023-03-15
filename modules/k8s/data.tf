@@ -27,7 +27,9 @@ data "aws_eks_cluster_auth" "eks" {
 
 data "aws_caller_identity" "current" {}
 
-data "aws_ecrpublic_authorization_token" "token" {}
+data "aws_ecrpublic_authorization_token" "token" {
+  provider = aws.virginia
+}
 
 data "aws_ssm_parameter" "is_karpenter_deployed" {
   name = "/eks/karpenter/is_deployed"

@@ -6,5 +6,9 @@ terraform {
     kubernetes = {
       source = "hashicorp/kubernetes"
     }
+    aws = {
+      source = "hashicorp/aws"
+       configuration_aliases = [ aws.virginia ]
+    }
   }
 }
