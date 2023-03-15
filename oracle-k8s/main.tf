@@ -48,7 +48,7 @@ module "k8s" {
 
   # Workaround for aws_ecrpublic_authorization_token bug
   providers = {
-    aws = aws.virginia
+    aws.virginia = aws.virginia
   }
 
   # Env
