@@ -11,9 +11,4 @@ module "karpenter" {
 
   create_iam_role = false
   iam_role_arn    = module.eks.eks_managed_node_groups["medium_group"].iam_role_arn
-
-  tags = {
-    Environment = var.env
-    Terraform   = "true"
-  }
 }
