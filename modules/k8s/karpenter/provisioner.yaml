@@ -24,3 +24,15 @@ spec:
     enabled: true
   providerRef:
     name: provider
+---
+apiVersion: karpenter.k8s.aws/v1alpha1
+kind: AWSNodeTemplate
+metadata:
+  name: provider
+spec:
+  subnetSelector:
+    karpenter.sh/discovery: "true"
+  securityGroupSelector:
+    karpenter.sh/discovery: ${eks_name}
+  tags:
+    karpenter.sh/discovery: ${eks_name}
