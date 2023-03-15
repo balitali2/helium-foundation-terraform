@@ -45,6 +45,11 @@ provider "kubectl" {
 module "k8s" {
   source = "../modules/k8s"
 
+  # Workaround for aws_ecrpublic_authorization_token bug
+  providers = {
+    aws.virginia = aws.virginia
+  }
+
   # Env
   env   = var.env // in tf cloud, create add var: env = web
   stage = var.stage // in tf cloud, create add var: stage = sdlc
