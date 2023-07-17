@@ -9,6 +9,7 @@ alertmanager_config: |
     repeat_interval: 1h    
     routes:
       - receiver: 'oracle-sns'
+        repeat_interval: 4h
         matchers:
         - alertname=~"Kubernetes.*"
   receivers:
@@ -48,7 +49,7 @@ alertmanager_config: |
                 {{ if .Annotations.pod }}*Pod:* `{{ .Annotations.pod }}`{{ end }}
                 {{ if .Annotations.container }}*Container:* `{{ .Annotations.container }}`{{ end }}
                 *Description:* {{ .Annotations.description }}
-                
+            
               {{ end }}
           attributes:
             key: severity
