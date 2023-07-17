@@ -3,12 +3,13 @@ alertmanager_config: |
   templates:
   route:
     receiver: prometheus-sns
-    group_by: ['alertname', 'severity']
+    group_by: ['alertname']
     group_wait: 30s
     group_interval: 15m
     repeat_interval: 1h    
     routes:
       - receiver: 'oracle-sns'
+        group_interval: 1h
         repeat_interval: 4h
         matchers:
         - alertname=~"Kubernetes.*"
