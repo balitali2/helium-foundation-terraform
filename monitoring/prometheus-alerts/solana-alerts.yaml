@@ -1,6 +1,17 @@
 groups:
   - name: solana-alerts
     rules:
+      - alert: MakerSolanaBalanceThreashold
+        expr: solana_account_balance{account="web-prod",type="sol",is_maker="true"} < 0.05
+        labels:
+          severity: critical
+        annotation:
+          title: 'Maker SOL Balance Low!'
+          account: '{{ $labels.account }}'
+          name: '{{ $labels.name }}'
+          address: '{{ $labels.address }}'
+          description: 'Maker SOL Balance has reached critical threshold of 0.05. Currently - ({{ $value }}) SOL'
+
       - alert: IntegrityCheckCorrectedRecords
         expr: round(increase(integrity_check{account="oracle-prod"}[5m])) > 0
         labels:
