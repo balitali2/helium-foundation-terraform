@@ -301,68 +301,20 @@ module "notify_slack" {
 }
 
 # ***************************************
-# Budget
+# Budget & Cost Anomaly
 # ***************************************
-resource "aws_budgets_budget" "account" {
-  name              = "monitoring monthly cost budget"
-  budget_type       = "COST"
-  limit_amount      = var.budget_amount
-  limit_unit        = "USD"
-  time_unit         = "MONTHLY"
+module "budget" {
+  source = "../modules/budget"
 
-  notification {
-    comparison_operator        = "GREATER_THAN"
-    threshold                  = 95
-    threshold_type             = "PERCENTAGE"
-    notification_type          = "ACTUAL"
-    subscriber_email_addresses = var.budget_email_list
-  }
+  # Env
+  name_override = "monitoring"
 
-  notification {
-    comparison_operator        = "GREATER_THAN"
-    threshold                  = 110
-    threshold_type             = "PERCENTAGE"
-    notification_type          = "FORECASTED"
-    subscriber_email_addresses = var.budget_email_list
-  }
-}
+  # Budget
+  budget_amount     = var.budget_amount
+  budget_email_list = var.budget_email_list
 
-# ***************************************
-# Cost Anomaly
-# ***************************************
-resource "aws_ce_anomaly_monitor" "anomaly_monitor" {
-  name              = "AWSServiceMonitor"
-  monitor_type      = "DIMENSIONAL"
-  monitor_dimension = "SERVICE"
-}
 
-resource "aws_ce_anomaly_subscription" "realtime_subscription" {
-  name      = "RealtimeAnomalySubscription"
-  frequency = "IMMEDIATE"
-
-  monitor_arn_list = [
-    aws_ce_anomaly_monitor.anomaly_monitor.arn,
-  ]
-
-  subscriber {
-    type    = "SNS"
-    address = module.notify_slack.slack_topic_arn
-  }
-
-  threshold_expression {
-    or {
-      dimension {
-        key           = "ANOMALY_TOTAL_IMPACT_PERCENTAGE"
-        values        = [var.raise_amount_percent]
-        match_options = ["GREATER_THAN_OR_EQUAL"]
-      }
-    }
-    or {
-      dimension {
-        key           = "ANOMALY_TOTAL_IMPACT_ABSOLUTE"
-        values        = [var.raise_amount_absolute]
-        match_options = ["GREATER_THAN_OR_EQUAL"]
-      }
-    }
-  }
+  # Cost Anomaly
+  raise_amount_percent  = var.raise_amount_percent
+  raise_amount_absolute = var.raise_amount_absolute
 }
