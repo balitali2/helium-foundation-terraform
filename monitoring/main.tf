@@ -303,7 +303,7 @@ module "notify_slack" {
 # ***************************************
 # Budget & Cost Anomaly
 # ***************************************
-resource "aws_budgets_budget" "account" {
+module "budget" {
   source = "../modules/budget"
 
   # Env

@@ -231,7 +231,7 @@ resource "aws_sns_topic_subscription" "nova_target" {
 # ***************************************
 # Budget & Cost Anomaly
 # ***************************************
-resource "aws_budgets_budget" "account" {
+module "budget" {
   source = "../modules/budget"
 
   # Env
