@@ -307,8 +307,6 @@ module "budget" {
   source = "../modules/budget"
 
   # Env
-  env           = var.env
-  stage         = var.stage
   name_override = "monitoring"
 
   # Budget
