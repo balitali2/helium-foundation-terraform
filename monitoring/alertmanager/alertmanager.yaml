@@ -16,6 +16,10 @@ alertmanager_config: |
         repeat_interval: 24h
         matchers:
         - alertname=~"CircuitBreaker.*"
+      - receiver: 'prometheus-sns'
+        repeat_interval: 24h
+        matchers:
+        - alertname="SolanaBalanceZeroThreasholdCatchAll"
       - receiver: 'oracle-sns'
         matchers:
         - alertname=~"Kubernetes.*"
