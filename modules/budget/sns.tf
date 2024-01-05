@@ -73,7 +73,7 @@ resource "aws_sns_topic_subscription" "billing_target" {
   endpoint  = var.budget_email_list[0]
 }
 
-resource "aws_sns_topic_subscription" "slac_target" {
+resource "aws_sns_topic_subscription" "slack_target" {
   topic_arn = aws_sns_topic.cost_anomaly_updates.arn
   protocol  = "email"
   endpoint  = var.slack_email
