@@ -31,7 +31,7 @@ groups:
           account: '{{ $labels.account }}'
           name: '{{ $labels.name }}'
           address: '{{ $labels.address }}'
-          description: 'SOL Balance has reached critical threshold of 0.1. Currently - ({{ $value }}) SOL'
+          description: 'SOL Balance has reached 0'
 
       - alert: SolanaBalanceThreasholdLazySigner
         expr: solana_account_balance{type="sol",name="lazy_signer",account="web-prod"} < 20
