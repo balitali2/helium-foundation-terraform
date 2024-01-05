@@ -245,4 +245,5 @@ module "budget" {
   # Cost Anomaly
   raise_amount_percent  = var.raise_amount_percent
   raise_amount_absolute = var.raise_amount_absolute
+  slack_email           = var.slack_email
 }
