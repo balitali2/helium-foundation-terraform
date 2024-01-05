@@ -272,9 +272,15 @@ variable "budget_amount" {
 }
 
 variable "budget_email_list" {
-  description = "Montly budget amount"
+  description = "Budget email list"
   type        = list(string)
   default     = []
+}
+
+variable "slack_email" {
+  description = "Slack email for billing anomalies"
+  type        = string
+  default     = ""
 }
 
 variable "raise_amount_percent" {
