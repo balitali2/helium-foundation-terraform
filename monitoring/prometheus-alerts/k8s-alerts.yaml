@@ -1,18 +1,6 @@
 groups:
   - name: k8s-alerts
     rules:
-      - alert: KubernetesProdPodCrashLoopBackOff
-        expr: increase(kube_pod_container_status_restarts_total{account=~".*prod"}[10m]) > 2
-        for: 1m
-        labels:
-          severity: critical
-        annotations:
-          title: KubernetesPodCrashLoopBackOff
-          account: '{{ $labels.account }}'
-          instance: '{{ $labels.instance }}'
-          pod: '{{ $labels.pod }}'
-          container: '{{ $labels.container }}'
-          description: "Pod `{{ $labels.pod }}` is in `CrashLoopBackOff`"
       - alert: KubernetesSdlcPodCrashLoopBackOff
         expr: increase(kube_pod_container_status_restarts_total{account=~".*sdlc"}[5m]) > 3
         for: 1m
