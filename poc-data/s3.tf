@@ -117,24 +117,6 @@ data "aws_iam_policy_document" "poc_data_buckets_bucket_policy_for_s3_cross_acco
       "arn:aws:s3:::${each.value}",
     ]
   }
-
-  statement {
-    principals {
-      type        = "AWS"
-      identifiers = [
-        "arn:aws:iam::${var.top_ledger_aws_account_id}:root"
-      ]
-    }
-    actions = [
-      "s3:GetObject",
-      "s3:ListBucket",
-      "s3:GetObjectTagging"
-    ]
-    resources = [
-      "arn:aws:s3:::${each.value}",
-      "arn:aws:s3:::${each.value}/*"
-    ]
-  }
 }
 
 # Create lifecycle policy to delete objects in replica buckets after 21 days
