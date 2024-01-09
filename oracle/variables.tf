@@ -263,3 +263,34 @@ variable "slack_webhook_url" {
   type        = string
   default     = ""
 }
+
+# --- Budget & Cost Anomaly ------------------------------------------------
+variable "budget_amount" {
+  description = "Montly budget amount"
+  type        = string
+  default     = ""
+}
+
+variable "budget_email_list" {
+  description = "Budget email list"
+  type        = list(string)
+  default     = []
+}
+
+variable "slack_email" {
+  description = "Slack email for billing anomalies"
+  type        = string
+  default     = ""
+}
+
+variable "raise_amount_percent" {
+  description = "The precentage increase in montly spend to trigger the billing anomaly detector"
+  type        = string
+  default     = "15"
+}
+
+variable "raise_amount_absolute" {
+  description = "The absolute increase in USD to trigger the billing anomaly detector"
+  type        = string
+  default     = "500"
+}

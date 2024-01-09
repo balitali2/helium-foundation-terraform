@@ -102,3 +102,23 @@ module "notify_slack" {
   # Prevent Terraform Cloud drift on null_resource
   recreate_missing_package = false
 }
+
+# ***************************************
+# Budget & Cost Anomaly
+# ***************************************
+module "budget" {
+  source = "../modules/budget"
+
+  # Env
+  env   = var.env
+  stage = var.stage
+
+  # Budget
+  budget_amount     = var.budget_amount
+  budget_email_list = var.budget_email_list
+
+  # Cost Anomaly
+  raise_amount_percent  = var.raise_amount_percent
+  raise_amount_absolute = var.raise_amount_absolute
+  slack_email           = var.slack_email
+}

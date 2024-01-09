@@ -227,3 +227,23 @@ resource "aws_sns_topic_subscription" "nova_target" {
   protocol  = "email"
   endpoint  = var.nova_sns_email
 }
+
+# ***************************************
+# Budget & Cost Anomaly
+# ***************************************
+module "budget" {
+  source = "../modules/budget"
+
+  # Env
+  env   = var.env
+  stage = var.stage
+
+  # Budget
+  budget_amount     = var.budget_amount
+  budget_email_list = var.budget_email_list
+
+  # Cost Anomaly
+  raise_amount_percent  = var.raise_amount_percent
+  raise_amount_absolute = var.raise_amount_absolute
+  slack_email           = var.slack_email
+}

@@ -12,17 +12,34 @@ provider "aws" {
 # ***************************************
 # Prometheus
 # ***************************************
-resource "aws_cloudwatch_log_group" "prometheus" {
-  name              = "/aws/prometheus/eks"
-  retention_in_days = 14
-}
-
 resource "aws_prometheus_workspace" "prometheus_eks_metrics" {
   alias = "eks-monitoring"
 
   logging_configuration {
     log_group_arn = "${aws_cloudwatch_log_group.prometheus.arn}:*"
   }
+}
+
+resource "aws_prometheus_alert_manager_definition" "alertmanager" {
+  workspace_id = aws_prometheus_workspace.prometheus_eks_metrics.id
+  definition   = file("${path.module}/alertmanager/alertmanager.yaml")
+}
+
+resource "aws_prometheus_rule_group_namespace" "k8s_alerts" {
+  name         = "k8s-alerts"
+  workspace_id = aws_prometheus_workspace.prometheus_eks_metrics.id
+  data         = file("${path.module}/prometheus-alerts/k8s-alerts.yaml")
+}
+
+resource "aws_prometheus_rule_group_namespace" "solana_alerts" {
+  name         = "solana-alerts"
+  workspace_id = aws_prometheus_workspace.prometheus_eks_metrics.id
+  data         = file("${path.module}/prometheus-alerts/solana-alerts.yaml")
+}
+
+resource "aws_cloudwatch_log_group" "prometheus" {
+  name              = "/aws/prometheus/eks"
+  retention_in_days = 14
 }
 
 resource "aws_iam_role" "prometheus_write_access" {
@@ -298,4 +315,24 @@ module "notify_slack" {
 
   # Prevent Terraform Cloud drift on null_resource
   recreate_missing_package = false
+}
+
+# ***************************************
+# Budget & Cost Anomaly
+# ***************************************
+module "budget" {
+  source = "../modules/budget"
+
+  # Env
+  name_override = "monitoring"
+
+  # Budget
+  budget_amount     = var.budget_amount
+  budget_email_list = var.budget_email_list
+
+
+  # Cost Anomaly
+  raise_amount_percent  = var.raise_amount_percent
+  raise_amount_absolute = var.raise_amount_absolute
+  slack_email           = var.slack_email
 }

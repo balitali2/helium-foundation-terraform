@@ -1,25 +1,21 @@
-# --- Environment variables ------------------------------------------------
-variable "aws_region" {
-  description = "AWS region you're deploying to e.g., us-east-1"
+variable "env" {
+  description = "Name of AWS enviroment that you're deploying to e.g., oracle, web, etc."
   type        = string
   default     = ""
 }
 
-# --- Environment variables ------------------------------------------------
-variable "account_ids" {
-  description = "Account IDs to grant Prometheus write access"
-  type        = list(string)
-  default     = []
-}
-
-# --- Slack ------------------------------------------------
-variable "slack_webhook_url" {
-  description = "Slack Webhook URL for alerting."
+variable "stage" {
+  description = "Name of AWS stage that you're deploying to e.g., sdlc, prod"
   type        = string
   default     = ""
 }
 
-# --- Budget & Cost Anomaly ------------------------------------------------
+variable "name_override" {
+  description = "Override for budget name"
+  type        = string
+  default     = ""
+}
+
 variable "budget_amount" {
   description = "Montly budget amount"
   type        = string
