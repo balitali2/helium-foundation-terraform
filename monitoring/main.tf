@@ -138,7 +138,7 @@ resource "aws_cloudwatch_metric_alarm" "rpc_proxy_prod_errors_alarm" {
   alarm_name          = "Monitoring - RPC Proxy Prod - HTTPS Errors"
   alarm_description   = ">= 400 HTTPS status codes being received from Helius."
   metric_name         = "HttpsErrors"
-  threshold           = "500"
+  threshold           = "1000"
   statistic           = "Sum"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "1"
@@ -243,7 +243,7 @@ resource "aws_cloudwatch_metric_alarm" "helius_rpc_proxy_prod_errors_alarm" {
   statistic           = "Sum"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "1"
-  period              = "900" // 15 minutes
+  period              = "1000" // 15 minutes
   namespace           = "Helius-Prod"
   treat_missing_data  = "notBreaching"
 
@@ -255,11 +255,11 @@ resource "aws_cloudwatch_metric_alarm" "helius_rpc_proxy_staging_errors_alarm" {
   alarm_name          = "Monitoring - Helius RPC Proxy Staging - HTTPS Errors"
   alarm_description   = ">= 400 HTTPS status codes being received from Helius."
   metric_name         = "HttpsErrors"
-  threshold           = "500"
+  threshold           = "1000"
   statistic           = "Sum"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "1"
-  period              = "900" // 15 minutes
+  period              = "500" // 15 minutes
   namespace           = "Helius-Staging"
   treat_missing_data  = "notBreaching"
 
@@ -271,7 +271,7 @@ resource "aws_cloudwatch_metric_alarm" "triton_rpc_proxy_prod_errors_alarm" {
   alarm_name          = "Monitoring - Triton RPC Proxy Prod - HTTPS Errors"
   alarm_description   = ">= 400 HTTPS status codes being received from Triton."
   metric_name         = "HttpsErrors"
-  threshold           = "500"
+  threshold           = "1000"
   statistic           = "Sum"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "1"
