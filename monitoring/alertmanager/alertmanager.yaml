@@ -22,12 +22,12 @@ alertmanager_config: |
         - alertname="SolanaBalanceZeroThreasholdCatchAll"
       - receiver: 'oracle-sns'
         matchers:
-        - alertname=~"Kubernetes.*"
+          - alertname=~"Kubernetes.*"
         routes:
-          receiver: 'oracle-sns'
-          repeat_interval: 4h
-          matchers:
-          - alertname="KubernetesJobFailed"
+          - receiver: 'oracle-sns'
+            repeat_interval: 4h
+            matchers:
+              - alertname="KubernetesJobFailed"
   receivers:
     - name: prometheus-sns
       sns_configs:
