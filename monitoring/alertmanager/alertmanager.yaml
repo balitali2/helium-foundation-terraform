@@ -23,6 +23,11 @@ alertmanager_config: |
       - receiver: 'oracle-sns'
         matchers:
         - alertname=~"Kubernetes.*"
+        routes:
+          receiver: 'oracle-sns'
+          repeat_interval: 4h
+          matchers:
+          - alertname="KubernetesJobFailed"
   receivers:
     - name: prometheus-sns
       sns_configs:
