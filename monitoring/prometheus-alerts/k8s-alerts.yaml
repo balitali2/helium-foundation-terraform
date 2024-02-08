@@ -246,3 +246,14 @@ groups:
           title: KubernetesHpaUnderutilized
           account: '{{ $labels.account }}'
           description: "HPA `{{ $labels.horizontalpodautoscaler }}` is constantly at minimum replicas for 50% of the time. Potential cost saving here."
+      - alert: KubernetesJobFailed
+        expr: kube_job_status_failed > 0
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          title: KubernetesJobFailed
+          account: '{{ $labels.account }}'
+          instance: '{{ $labels.instance }}'
+          pod: '{{ $labels.job_name }}'
+          description: "Job failed to complete with reason: {{ $labels.reason }}"
