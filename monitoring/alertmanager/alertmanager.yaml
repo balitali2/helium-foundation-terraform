@@ -20,11 +20,21 @@ alertmanager_config: |
         repeat_interval: 24h
         matchers:
         - alertname="SolanaBalanceZeroThreasholdCatchAll"
-      - receiver: 'oracle-sns'
+      - receiver: 'oracle-sns-sdlc'
         matchers:
           - alertname=~"Kubernetes.*"
+          - account =~ ".*sdlc.*"
         routes:
-          - receiver: 'oracle-sns'
+          - receiver: 'oracle-sns-sdlc'
+            repeat_interval: 8h
+            matchers:
+              - alertname="KubernetesJobFailed"
+      - receiver: 'oracle-sns-prod'
+        matchers:
+          - alertname=~"Kubernetes.*"
+          - account =~ ".*prod.*"
+        routes:
+          - receiver: 'oracle-sns-prod'
             repeat_interval: 8h
             matchers:
               - alertname="KubernetesJobFailed"
@@ -49,14 +59,14 @@ alertmanager_config: |
           attributes:
             key: severity
             value: SEV
-    - name: oracle-sns
+    - name: oracle-sns-sdlc
       sns_configs:
         - topic_arn: arn:aws:sns:us-west-2:315657680256:eks-alerts
           send_resolved: true
           sigv4:
             region: us-west-2
           message: |
-            channel: 'oracle-alerts'
+            channel: 'oracle-alerts-sdlc'
             text: >-
               {{ range .Alerts -}}
                 *Alert:* `{{ .Annotations.title }}`{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
@@ -70,4 +80,24 @@ alertmanager_config: |
           attributes:
             key: severity
             value: SEV
+    - name: oracle-sns-prod
+      sns_configs:
+        - topic_arn: arn:aws:sns:us-west-2:315657680256:eks-alerts
+          send_resolved: true
+          sigv4:
+            region: us-west-2
+          message: |
+            channel: 'oracle-alerts-prod'
+            text: >-
+              {{ range .Alerts -}}
+                *Alert:* `{{ .Annotations.title }}`{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
+                {{ if .Annotations.account }}*Account:* `{{ .Annotations.account }}`{{ end }}
+                {{ if .Annotations.instance }}*Instance:* `{{ .Annotations.instance }}`{{ end }}
+                {{ if .Annotations.pod }}*Pod:* `{{ .Annotations.pod }}`{{ end }}
+                {{ if .Annotations.container }}*Container:* `{{ .Annotations.container }}`{{ end }}
+                *Description:* {{ .Annotations.description }}
 
+              {{ end }}
+          attributes:
+            key: severity
+            value: SEV

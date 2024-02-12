@@ -313,7 +313,7 @@ module "notify_slack" {
   sns_topic_name = "slack-topic"
 
   slack_webhook_url = var.slack_webhook_url
-  slack_channel     = "oracle-alerts"
+  slack_channel     = var.slack_channel
   slack_username    = "reporter"
 
   # Prevent Terraform Cloud drift on null_resource

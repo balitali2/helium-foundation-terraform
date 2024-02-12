@@ -166,6 +166,12 @@ variable "slack_webhook_url" {
   default     = ""
 }
 
+variable "slack_channel" {
+  description = "Slack channel for alerting."
+  type        = string
+  default     = ""
+}
+
 # --- Misc ------------------------------------------------
 variable "top_ledger_aws_account_id" {
   description = "AWS account ID for Top Ledger"
