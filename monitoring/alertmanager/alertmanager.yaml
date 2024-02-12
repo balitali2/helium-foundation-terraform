@@ -25,7 +25,7 @@ alertmanager_config: |
           - alertname=~"Kubernetes.*"
         routes:
           - receiver: 'oracle-sns'
-            repeat_interval: 4h
+            repeat_interval: 12h
             matchers:
               - alertname="KubernetesJobFailed"
   receivers:
