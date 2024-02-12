@@ -29,11 +29,12 @@ alertmanager_config: |
             repeat_interval: 8h
             matchers:
               - alertname="KubernetesJobFailed"
-      - receiver: 'oracle-sns'
+      - receiver: 'oracle-sns-prod'
         matchers:
           - alertname=~"Kubernetes.*"
+          - account =~ ".*prod.*"
         routes:
-          - receiver: 'oracle-sns'
+          - receiver: 'oracle-sns-prod'
             repeat_interval: 8h
             matchers:
               - alertname="KubernetesJobFailed"
@@ -79,14 +80,14 @@ alertmanager_config: |
           attributes:
             key: severity
             value: SEV
-    - name: oracle-sns
+    - name: oracle-sns-prod
       sns_configs:
         - topic_arn: arn:aws:sns:us-west-2:315657680256:eks-alerts
           send_resolved: true
           sigv4:
             region: us-west-2
           message: |
-            channel: 'oracle-alerts'
+            channel: 'oracle-alerts-prod'
             text: >-
               {{ range .Alerts -}}
                 *Alert:* `{{ .Annotations.title }}`{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
