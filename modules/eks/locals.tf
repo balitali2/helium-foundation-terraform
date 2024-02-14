@@ -94,7 +94,7 @@ locals {
         rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${tolist(data.aws_iam_roles.admin_role.names)[0]}"
         username = "AWSAdministratorAccess:{{SessionName}}"
         groups = [
-          "view",
+          "system:read-only",
         ]
       }
     }
@@ -116,7 +116,7 @@ locals {
         rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${tolist(data.aws_iam_roles.admin_role.names)[0]}"
         username = "AWSAdministratorAccess:{{SessionName}}"
         groups = [
-          "view",
+          "system:read-only",
         ]
       }
     }
@@ -160,7 +160,7 @@ locals {
         rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${tolist(data.aws_iam_roles.admin_role.names)[0]}"
         username = "AWSAdministratorAccess:{{SessionName}}"
         groups = [
-          "system:read-only",
+          "system:masters",
         ]
       }
     }
