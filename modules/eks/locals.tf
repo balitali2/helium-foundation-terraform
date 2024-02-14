@@ -1,6 +1,6 @@
 locals {
-  node_types = {
-    poc-data = {
+  poc-data-prod = {
+    node_types = {
       medium_group = {
         name                   = var.cluster_node_name
         instance_types         = [var.eks_instance_type]
@@ -67,7 +67,17 @@ locals {
         ]
       }
     }
-    oracle = {
+    aws_auth_roles = {
+      rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${tolist(data.aws_iam_roles.admin_role.names)[0]}"
+      username = "AWSAdministratorAccess:{{SessionName}}"
+      groups = [
+        "system:masters",
+      ]
+    }
+  }
+
+  oracle-prod = {
+    node_types = {
       medium_group = {
         name                   = var.cluster_node_name
         instance_types         = [var.eks_instance_type]
@@ -79,7 +89,17 @@ locals {
         ]
       }
     }
-    web = {      
+    aws_auth_roles = {
+      rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${tolist(data.aws_iam_roles.admin_role.names)[0]}"
+      username = "AWSAdministratorAccess:{{SessionName}}"
+      groups = [
+        "view",
+      ]
+    }
+  }
+
+  web-prod = {
+    node_types = {
       medium_group = {
         name                   = var.cluster_node_name
         instance_types         = [var.eks_instance_type]
@@ -90,6 +110,57 @@ locals {
           aws_security_group.small_node_group.id
         ]
       }
+    }
+    aws_auth_roles = {
+      rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${tolist(data.aws_iam_roles.admin_role.names)[0]}"
+      username = "AWSAdministratorAccess:{{SessionName}}"
+      groups = [
+        "view",
+      ]
+    }
+  }
+
+  oracle-sdlc = {
+    node_types = {
+      medium_group = {
+        name                   = var.cluster_node_name
+        instance_types         = [var.eks_instance_type]
+        min_size               = var.cluster_min_size
+        max_size               = var.cluster_max_size
+        desired_size           = var.cluster_desired_size
+        vpc_security_group_ids = [
+          aws_security_group.small_node_group.id
+        ]
+      }
+    }
+    aws_auth_roles = {
+      rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${tolist(data.aws_iam_roles.admin_role.names)[0]}"
+      username = "AWSAdministratorAccess:{{SessionName}}"
+      groups = [
+        "system:masters",
+      ]
+    }
+  }
+
+  web-sdlc = {
+    node_types = {
+      medium_group = {
+        name                   = var.cluster_node_name
+        instance_types         = [var.eks_instance_type]
+        min_size               = var.cluster_min_size
+        max_size               = var.cluster_max_size
+        desired_size           = var.cluster_desired_size
+        vpc_security_group_ids = [
+          aws_security_group.small_node_group.id
+        ]
+      }
+    }
+    aws_auth_roles = {
+      rolearn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${tolist(data.aws_iam_roles.admin_role.names)[0]}"
+      username = "AWSAdministratorAccess:{{SessionName}}"
+      groups = [
+        "system:masters",
+      ]
     }
   }
 }
