@@ -6,6 +6,7 @@ groups:
         for: 1m
         labels:
           severity: critical
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesPodCrashLoopBackOff
           account: '{{ $labels.account }}'
@@ -18,6 +19,7 @@ groups:
         for: 1m
         labels:
           severity: critical
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesPodCrashLoopBackOff
           account: '{{ $labels.account }}'
@@ -30,6 +32,7 @@ groups:
         for: 2m
         labels:
           severity: critical
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesPodImagePullBackOff
           account: '{{ $labels.account }}'
@@ -42,6 +45,7 @@ groups:
         for: 15m
         labels:
           severity: critical
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesPodNotHealthy
           account: '{{ $labels.account }}'
@@ -54,6 +58,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesContainerCpuUsage
           account: '{{ $labels.account }}'
@@ -66,6 +71,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesContainerMemoryUsage
           account: '{{ $labels.account }}'
@@ -78,6 +84,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesContainerVolumeUsage
           account: '{{ $labels.account }}'
@@ -90,6 +97,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesContainerHighThrottleRate
           account: '{{ $labels.account }}'
@@ -102,6 +110,7 @@ groups:
         for: 2m
         labels:
           severity: critical
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesMemoryPressure
           account: '{{ $labels.account }}'
@@ -114,6 +123,7 @@ groups:
         for: 2m
         labels:
           severity: critical
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesDiskPressure
           account: '{{ $labels.account }}'
@@ -126,6 +136,7 @@ groups:
         for: 2m
         labels:
           severity: critical
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesNetworkUnavailable
           account: '{{ $labels.account }}'
@@ -138,6 +149,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesOutOfCapacity
           account: '{{ $labels.account }}'
@@ -150,6 +162,7 @@ groups:
         for: 0m
         labels:
           severity: warning
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesContainerOomKiller
           account: '{{ $labels.account }}'
@@ -162,6 +175,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesPersistentvolumeclaimPending
           account: '{{ $labels.account }}'
@@ -171,6 +185,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesVolumeOutOfDiskSpace
           account: '{{ $labels.account }}'
@@ -183,6 +198,7 @@ groups:
         for: 0m
         labels:
           severity: critical
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesVolumeFullInFourDays
           account: '{{ $labels.account }}'
@@ -195,6 +211,7 @@ groups:
         for: 0m
         labels:
           severity: critical
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesPersistentvolumeError
           account: '{{ $labels.account }}'
@@ -207,6 +224,7 @@ groups:
         for: 2m
         labels:
           severity: warning
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesHpaScalingAbility
           account: '{{ $labels.account }}'
@@ -219,6 +237,7 @@ groups:
         for: 5m
         labels:
           severity: warning
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesHpaMetricAvailability
           account: '{{ $labels.account }}'
@@ -231,6 +250,7 @@ groups:
         for: 2m
         labels:
           severity: info
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesHpaScaleCapability
           account: '{{ $labels.account }}'
@@ -242,7 +262,20 @@ groups:
         for: 0m
         labels:
           severity: info
+          account: '{{ $labels.account }}'
         annotations:
           title: KubernetesHpaUnderutilized
           account: '{{ $labels.account }}'
           description: "HPA `{{ $labels.horizontalpodautoscaler }}` is constantly at minimum replicas for 50% of the time. Potential cost saving here."
+      - alert: KubernetesJobFailed
+        expr: kube_job_status_failed > 0
+        for: 0m
+        labels:
+          severity: critical
+          account: '{{ $labels.account }}'
+        annotations:
+          title: KubernetesJobFailed
+          account: '{{ $labels.account }}'
+          instance: '{{ $labels.instance }}'
+          pod: '{{ $labels.job_name }}'
+          description: "Job failed to complete with reason: {{ $labels.reason }}"

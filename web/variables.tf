@@ -258,6 +258,12 @@ variable "slack_webhook_url" {
   default     = ""
 }
 
+variable "slack_channel" {
+  description = "Slack channel for alerting."
+  type        = string
+  default     = ""
+}
+
 # --- Budget & Cost Anomaly ------------------------------------------------
 variable "budget_amount" {
   description = "Montly budget amount"
