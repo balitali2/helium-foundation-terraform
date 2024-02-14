@@ -31,6 +31,10 @@ data "kubectl_path_documents" "autoscaler" {
   }
 }
 
+data "kubectl_path_documents" "cluster-auth" {
+  pattern = "${path.module}/cluster-auth/cluster-auth.yaml"
+}
+
 data "aws_eks_cluster" "eks" {
   name = local.cluster_name
 }
