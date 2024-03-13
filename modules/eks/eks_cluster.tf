@@ -28,17 +28,17 @@ module "eks" {
   cluster_addons = {
     # aws eks describe-addon-versions --addon-name coredns
     coredns = {
-      addon_version     = "v1.9.3-eksbuild.2"
+      addon_version     = "v1.9.3-eksbuild.7"
       resolve_conflicts = "OVERWRITE"
     }
     # aws eks describe-addon-versions --addon-name kube-proxy
     kube-proxy = {
-      addon_version      = "v1.25.6-eksbuild.1"
+      addon_version      = "v1.26.9-eksbuild.2"
       resolve_conflicts  = "OVERWRITE"
     }
     # aws eks describe-addon-versions --addon-name vpc-cni
     vpc-cni = {
-      addon_version        = "v1.12.2-eksbuild.1"
+      addon_version        = "v1.15.1-eksbuild.1"
       resolve_conflicts    = "OVERWRITE"
       configuration_values = jsonencode({
         init = {
@@ -53,7 +53,7 @@ module "eks" {
     }
     # aws eks describe-addon-versions --addon-name aws-ebs-csi-driver
     aws-ebs-csi-driver = {
-      addon_version = "v1.20.0-eksbuild.1"
+      addon_version = "v1.28.0-eksbuild.1"
     }
   }
 

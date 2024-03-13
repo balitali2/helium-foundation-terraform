@@ -4,9 +4,11 @@ resource "helm_release" "argocd" {
   repository       = "https://argoproj.github.io/argo-helm"
   chart            = "argo-cd"
   namespace        = "argocd"
-  version          = "5.8.3"
+  version          = "5.55.0"
   create_namespace = true
 
+  # Definitions below allow for SSL Termination at Ingress Controller
+  # https://artifacthub.io/packages/helm/argo/argo-cd#ssl-termination-at-ingress-controller
   set {
     name = "server.insecure"
     value = "true"
